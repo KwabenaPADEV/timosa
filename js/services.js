@@ -384,3 +384,159 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+
+/*=========================================
+    SERVICES HERO SLIDER
+=========================================*/
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const slides = document.querySelectorAll(".service-hero .slide");
+    const dots = document.querySelectorAll(".service-hero .dot");
+
+    if (!slides.length) return;
+
+    let currentSlide = 0;
+    let sliderInterval;
+
+    //==========================
+    // Show Slide
+    //==========================
+
+    function showSlide(index) {
+
+        slides.forEach((slide) => {
+            slide.classList.remove("active");
+        });
+
+        dots.forEach((dot) => {
+            dot.classList.remove("active");
+        });
+
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+
+        currentSlide = index;
+    }
+
+    //==========================
+    // Next Slide
+    //==========================
+
+    function nextSlide() {
+
+        currentSlide++;
+
+        if (currentSlide >= slides.length) {
+            currentSlide = 0;
+        }
+
+        showSlide(currentSlide);
+
+    }
+
+    //==========================
+    // Previous Slide
+    //==========================
+
+    function previousSlide() {
+
+        currentSlide--;
+
+        if (currentSlide < 0) {
+            currentSlide = slides.length - 1;
+        }
+
+        showSlide(currentSlide);
+
+    }
+
+    //==========================
+    // Auto Play
+    //==========================
+
+    function startSlider() {
+
+        sliderInterval = setInterval(nextSlide, 5000);
+
+    }
+
+    function stopSlider() {
+
+        clearInterval(sliderInterval);
+
+    }
+
+    //==========================
+    // Dot Navigation
+    //==========================
+
+    dots.forEach((dot, index) => {
+
+        dot.addEventListener("click", () => {
+
+            stopSlider();
+
+            showSlide(index);
+
+            startSlider();
+
+        });
+
+    });
+
+    //==========================
+    // Pause on Hover
+    //==========================
+
+    const hero = document.querySelector(".service-hero");
+
+    hero.addEventListener("mouseenter", stopSlider);
+
+    hero.addEventListener("mouseleave", startSlider);
+
+    //==========================
+    // Swipe Support (Mobile)
+    //==========================
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    hero.addEventListener("touchstart", (e) => {
+
+        touchStartX = e.changedTouches[0].screenX;
+
+    });
+
+    hero.addEventListener("touchend", (e) => {
+
+        touchEndX = e.changedTouches[0].screenX;
+
+        if (touchEndX < touchStartX - 50) {
+
+            stopSlider();
+            nextSlide();
+            startSlider();
+
+        }
+
+        if (touchEndX > touchStartX + 50) {
+
+            stopSlider();
+            previousSlide();
+            startSlider();
+
+        }
+
+    });
+
+    //==========================
+    // Start
+    //==========================
+
+    showSlide(0);
+
+    startSlider();
+
+});
